@@ -1,0 +1,192 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Rails 5</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+          <H2>
+            Rails 5 PSA
+          </H2>
+            Some notes on Rails 5 thanks to Jordan Carl and Nate
+        </section>
+				<section>
+          <h4>
+            Setting up Dev
+          </h4>
+          <pre><code class="hljs" data-trim contenteditable>
+rake aborted!
+ActiveRecord::NoEnvironmentInSchemaError:
+...
+
+> rails app:update:bin
+> bin/rails db:environment:set RAILS_ENV=development
+          </code></pre>
+        </section>
+
+				<section>
+          <section data-markdown>
+            #### Halting Callbacks
+
+            * **Rails 4:** Returning `false` halted a callback
+            * **Rails 5:** Only `throw(:abort)` halts a callback
+          </section>
+          <aside class="notes">
+            https://blog.bigbinary.com/2016/02/13/rails-5-does-not-halt-callback-chain-when-false-is-returned.html
+          </aside>
+        </section>
+
+				<section>
+          <section data-markdown>
+            #### Passing AR records into find/where
+
+            * **Rails 4:** `User.find(user) => user`
+            * **Rails 5:** `User.find(user) => Error`
+            * **Rails 5:** `User.find(user.id) => user`
+          </section>
+          <aside class="notes">
+
+          </aside>
+        </section>
+
+				<section>
+          <h4>
+            Controller specs keyword arguments
+          </h4>
+
+          <pre><code class="hljs" data-trim contenteditable>
+# Rails 4
+get :index, params, headers
+# Rails 5
+get :index, params: params, headers: headers
+          </code></pre>
+          <aside class="notes">
+            This is called key word args or kwargs.
+          </aside>
+        </section>
+
+				<section>
+          <h4>
+            Migrations
+          </h4>
+
+            In Rails 5 migrations need to have the version of Rails they were
+            written in specified.
+
+          <pre><code class="hljs" data-trim contenteditable>
+class MyMigration < ActiveRecord::Migration[4.2]
+  ...
+          </code></pre>
+          <aside class="notes">
+
+          </aside>
+        </section>
+
+				<section>
+          <section data-markdown>
+            #### Parameters to unsafe hash
+
+            * **Rails 4:** Parameters subclassed from `HashWithIndifferentAccess`
+            * **Rails 5:** No longer true, calls to `to_hash` without permitting params will error
+            * **Rails 5:** Especially noteworthy on forms and Virtus
+          </section>
+          <aside class="notes">
+
+          </aside>
+        </section>
+
+        <section>
+          <section data-markdown>
+            #### Bug in .empty? on relations with table aliases
+
+            * Bug is fixed in Rails 5.2
+            * For now avoid empty in production and coerce to arrays in tests
+          </section>
+          <aside class="notes">
+
+          </aside>
+        </section>
+
+				<section>
+          <section data-markdown>
+            #### Evoke rails/rake
+
+            * **Rails 4:** `rake db:migrate`
+            * **Rails 5:** `rails db:migrate`
+          </section>
+          <aside class="notes">
+
+          </aside>
+        </section>
+
+				<section>
+          <section data-markdown>
+            #### \*_action over \*_filter
+          </section>
+          <aside class="notes">
+
+          </aside>
+        </section>
+
+				<section>
+          <section data-markdown>
+            ### Questions?
+          </section>
+          <aside class="notes">
+
+          </aside>
+        </section>
+
+				<section>
+          <section data-markdown>
+            #### Extra Resources
+
+            * https://github.com/ShippingEasy/ship-it/wiki/Rails-5-Upgrade
+            * http://guides.rubyonrails.org/5_0_release_notes.html
+            * http://guides.rubyonrails.org/5_1_release_notes.html
+          </section>
+          <aside class="notes">
+
+          </aside>
+        </section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
